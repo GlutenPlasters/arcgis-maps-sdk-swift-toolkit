@@ -172,7 +172,10 @@ struct WorldTrackingSceneView: View {
         
         // Make sure that horizontal and vertical accuracy are valid.
         guard location.horizontalAccuracy >= .zero,
-              location.verticalAccuracy >= .zero else { return }
+              location.horizontalAccuracy < 100,
+              location.verticalAccuracy >= .zero else {
+            return
+        }
         
         // Make sure we need to update the camera based on distance deviation.
         guard !initialCameraIsSet || shouldUpdateCamera(for: location) else { return }

@@ -111,8 +111,13 @@ public struct WorldScaleSceneView: View {
             // Request when-in-use location authorization.
             // The view utilizes a location datasource and it will not start until authorized.
             let locationManager = CLLocationManager()
+            locationManager.desiredAccuracy = kCLLocationAccuracyBest
             if locationManager.authorizationStatus == .notDetermined {
-                locationManager.requestWhenInUseAuthorization()
+                do {
+                    try await locationManager.requestTemporaryFullAccuracyAuthorization(withPurposeKey: "best-accuracy")
+                } catch {
+                    print("Error requesting location authorization: \(error)")
+                }
             }
             if !checkTrackingCapabilities(locationManager) {
                 print("Device doesn't support full accuracy location.")
